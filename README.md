@@ -29,7 +29,7 @@ To run the test suite:
 npm test
 ```
 
-62 tests across the EMI/IRR math, the affordability engine, the three golden persona fixtures, the adaptive question flow, a live-assumption-change check, and one full end-to-end UI smoke test that actually renders the app and clicks through a real flow.
+63 tests across the EMI/IRR math, the affordability engine, the three golden persona fixtures, the adaptive question flow, a live-assumption-change check, and two full end-to-end UI tests (a happy-path walkthrough and the interactive "What would change this?" sensitivity screen) that actually render the app and click through real flows.
 
 ## What's in this repo
 
@@ -73,9 +73,9 @@ If you're reviewing this as a submission, here's the suggested path:
 
 ## What I'd build next
 
-- A real sensitivity/"what changes the answer" screen in the UI (the engine already supports this — see `src/tests/liveAssumptionChange.test.ts` — it just isn't wired to an interactive slider in the UI yet).
 - Full gold-loan and home-loan UI flows (currently config stubs only, since none of the three required personas need them).
 - A more granular "existing loan detail" UI capture (currently a simplified count + highest-rate input) to match the richer `existingLoanDetail` type already in the rules engine.
+- More sliders on the "What would change this?" screen (currently household expenses, existing EMI, credit score, and co-applicant — recent-bounce resolution and collateral value would be natural additions).
 
 ## What I'd cut first under more time pressure
 

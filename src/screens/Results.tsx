@@ -16,7 +16,15 @@ const VERDICT_STYLE: Record<Verdict, string> = {
   dont_borrow: 'bg-dont-borrow-bg text-dont-borrow',
 };
 
-export function Results({ onViewCard, onEditAnswers }: { onViewCard: () => void; onEditAnswers: () => void }) {
+export function Results({
+  onViewCard,
+  onEditAnswers,
+  onExplore,
+}: {
+  onViewCard: () => void;
+  onEditAnswers: () => void;
+  onExplore: () => void;
+}) {
   const { outputs } = useBorrowerSession();
 
   if (!outputs) {
@@ -136,8 +144,15 @@ export function Results({ onViewCard, onEditAnswers }: { onViewCard: () => void;
       )}
 
       <button
+        onClick={onExplore}
+        className="mt-8 w-full rounded-xl border border-ink px-6 py-4 text-base font-medium text-ink transition hover:bg-paper-raised"
+      >
+        What would change this?
+      </button>
+
+      <button
         onClick={onViewCard}
-        className="mt-8 w-full rounded-xl bg-ink px-6 py-4 text-base font-medium text-paper transition hover:bg-ink-soft"
+        className="mt-3 w-full rounded-xl bg-ink px-6 py-4 text-base font-medium text-paper transition hover:bg-ink-soft"
       >
         Open my Negotiation Card
       </button>
