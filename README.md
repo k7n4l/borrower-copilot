@@ -78,7 +78,3 @@ If you're reviewing this as a submission, here's the suggested path:
 - Full gold-loan and home-loan UI flows (currently config stubs only, since none of the three required personas need them).
 - A more granular "existing loan detail" UI capture (currently a simplified count + highest-rate input) to match the richer `existingLoanDetail` type already in the rules engine.
 - More sliders on the "What would change this?" screen (currently household expenses, existing EMI, credit score, and co-applicant — recent-bounce resolution and collateral value would be natural additions).
-
-## What I'd cut first under more time pressure
-
-Visual polish, animation, and broader product coverage — all explicitly de-prioritised by the brief's own scoring weights, which put 70 of 100 points on domain reasoning, question design, and explainability rather than engineering or craft.
