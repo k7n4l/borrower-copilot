@@ -209,6 +209,9 @@ function ComparisonRow({ label, before, after, changed }: { label: string; befor
 }
 
 function estimateIncome(a: Answers): number {
-  if (a.incomeType === 'salaried') return a.netMonthlyIncomeSalaried ?? 50000;
-  return a.monthlyIncomeRangeLow ?? 30000;
+  if (a.incomeType === 'salaried' && typeof a.netMonthlyIncomeSalaried === 'number') {
+    return a.netMonthlyIncomeSalaried;
+  }
+  if (typeof a.monthlyIncomeRangeLow === 'number') return a.monthlyIncomeRangeLow;
+  throw new Error('Sensitivity exploration requires a known income answer.');
 }

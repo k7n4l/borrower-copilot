@@ -9,7 +9,7 @@ This document lists every threshold, formula, and assumption used by the app. Ev
 ## 1. Income normalisation (`INC-xx`)
 
 | Rule | What | Value | Why | Source |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | INC-01 | Salaried reliable income | Stated net take-home, used as-is | Directly verifiable via payslip/bank statement in a real product | Fact (definitional) |
 | INC-01 | Self-employed reliable income | Low end of the borrower's stated monthly range | A self-reported range is unverified; planning off the low end protects against over-committing against income that may not recur | My judgement |
 | INC-02 | Informal-income reliable income | Low end of stated range (same treatment as INC-01 for self-employed) | Same rationale — income volatility, no documentation | My judgement |
@@ -26,7 +26,7 @@ This document lists every threshold, formula, and assumption used by the app. Ev
 The safe EMI ceiling is the **stricter (lower)** of two independent checks — a FOIR-style debt-service check and a residual-income check. This hybrid exists because FOIR alone can look compliant on paper while leaving too little to actually live on, especially for thinner-margin segments (see the Ravi and Anita run-throughs).
 
 | Rule | What | Value | Why | Source |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | AFF-01 | FOIR ceiling — salaried, income < ₹50,000/mo | 40% of income | Lower planning ceiling for the thinnest salaried incomes | My judgement / common planning convention — **not** an RBI-mandated figure (RBI does not fix a single FOIR %) |
 | AFF-01 | FOIR ceiling — salaried, ₹50,000–₹1,00,000/mo | 45% of income | Mid-tier planning ceiling | My judgement |
 | AFF-01 | FOIR ceiling — salaried, > ₹1,00,000/mo | 50% of income | Higher income affords a larger debt-service share | My judgement |
@@ -40,7 +40,7 @@ The safe EMI ceiling is the **stricter (lower)** of two independent checks — a
 ## 3. Borrow / Borrow less / Don't borrow (`VER-xx`)
 
 | Rule | What | Value | Why | Source |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | VER-01 | Hard "Don't borrow" | Safe EMI ceiling ≤ 0 | No safe room exists in the budget, full stop | Direct mathematical consequence of AFF-01–03 |
 | VER-02 | Hard-stop combination | Unresolved recent bounce **AND** (existing debt at ≥24% APR **OR** 3+ active loans) → "Don't borrow" | This specific combination is a materially more urgent situation than either signal alone — active repayment distress, not just elevated risk | My judgement |
 | VER-03 | "Borrow less" margin | If EMI at the requested amount exceeds the safe ceiling by more than 10%, verdict is "Borrow less" and the fitting amount is shown instead | A gap this size reflects a real shortfall rather than estimation noise in our own income/expense inputs (see VER-04 rationale) | My judgement — see VER-04 |
@@ -51,14 +51,16 @@ The safe EMI ceiling is the **stricter (lower)** of two independent checks — a
 
 Both figures use the standard reducing-balance EMI formula, solved for principal:
 
-```
+```text
 EMI = P × r × (1+r)^n / ((1+r)^n − 1)
 ```
 
 | Rule | What | Value | Why | Source |
-|---|---|---|---|---|
+| ------ | ------ | ------- | ----- | -------- |
 | AMT-SAFE-01 | Borrower-safe amount | Principal such that EMI = safe EMI ceiling, at the fair-rate midpoint and standard (Balanced) tenure | The number the borrower should actually use | Direct mathematical consequence of AFF-01–05 |
 | AMT-LENDER-01 | Lender-likely amount | Principal such that EMI = 50% of *lender-facing* income minus existing EMI (a looser, income-only proxy — no household-expense deduction), capped by an LTV limit for secured products if collateral is present | Lenders typically underwrite primarily against documented income and FOIR, without the fuller expense picture our safe-side check uses | Illustrative planning proxy — **not** an actual lender's formula or a guarantee of sanction |
+| AMT-LENDER-02 | Lender-facing FOIR proxy | 50% of lender-facing income | Provides a deliberately loose income-only comparison point; it is not a promise of sanction and does not replace lender underwriting | my judgement |
+| AMT-LENDER-03 | Unknown existing EMI in lender proxy | 10% of lender-facing income | Avoids silently assuming zero debt when the borrower cannot provide EMI details, while remaining explicitly approximate | my judgement |
 | — | LTV cap application | If `estimatedValue × LTV_CEILING[product]` is lower than the income-based lender-likely figure, the LTV figure is used instead | Collateral raises the ceiling but never bypasses it — this is what keeps Ravi's numbers honest (affordability still binds even with ₹45L of property) | Illustrative — verify current lender/RBI-linked LTV caps |
 
 ## 5. Fair rate bands (`RATE-xx`)
@@ -66,7 +68,7 @@ EMI = P × r × (1+r)^n / ((1+r)^n − 1)
 Base planning bands by product/segment — **all illustrative, verify against current market quotes before any real use:**
 
 | Product / segment | Band | Why |
-|---|---|---|
+| --- | --- | --- |
 | Personal loan, strong salaried | 10.5%–13% | Stable, verifiable income; good score |
 | Personal loan, self-employed / thin file | 14%–18% | Unsecured lenders price in verification and default risk |
 | Loan against property | 9.5%–12% | Secured by immovable property |
@@ -78,7 +80,7 @@ Base planning bands by product/segment — **all illustrative, verify against cu
 Adjustments applied on top of the base band:
 
 | Rule | What | Value | Why | Source |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | RATE-01 | Unknown / no credit score | Widens **both** ends of the band by 75 bps, forces confidence to Low | An unknown score must never be treated as a bad score | My judgement |
 | RATE-02 | Unresolved recent bounce | Shifts the low end by +150 bps and the high end by +200 bps | Materially different (more urgent) risk signal than "unknown" | My judgement |
 | RATE-03 | Strong score (≥750) | Tightens both ends by 50 bps | Rewards a demonstrably strong, verifiable credit history | My judgement |
@@ -86,7 +88,7 @@ Adjustments applied on top of the base band:
 ## 6. All-in APR (`APR-xx`)
 
 | Rule | What | Value | Why | Source |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | APR-01 | Processing fee assumption | 2% of principal, when not otherwise specified | Illustrative — shows the borrower how fees affect all-in cost even without a specific lender quote | My judgement / illustrative |
 | APR-02 | APR calculation method | Numerical IRR of actual borrower cash flows (disbursement net of fee, then monthly EMIs), annualised via bisection | Materially more honest than a linear `nominal + fee/tenure` approximation, which understates the true cost of an upfront fee charged against the full principal | Mathematical method, not an assumption |
 
@@ -101,7 +103,7 @@ The app deliberately does **not** force the zero-fee case back down to the nomin
 ## 7. Tenure (`TEN-xx`)
 
 | Rule | What | Value | Why | Source |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | TEN-01 | Three tenure options shown | Short = 50% of max tenure, Balanced = 75%, Long = 100% | Gives a real short/medium/long trade-off rather than an arbitrary spread | My judgement |
 | TEN-02 | Max tenure by product (years) | Personal loan: 5 · LAP: 15 · Secured business: 10 · Gold: 3 · Two-wheeler: 5 · Home loan: 20 | Broadly typical product-level tenure ceilings | Illustrative, verify |
 | TEN-03 | Max age at loan end | 65 | No recommended tenure should run past this age | My judgement |
@@ -110,21 +112,21 @@ The app deliberately does **not** force the zero-fee case back down to the nomin
 ## 8. Stress testing (`STRESS-xx`)
 
 | Rule | What | Value | Why | Source |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | STRESS-01 | Income-drop shock | 20% income reduction, applied to all products | Commonly used planning haircut — not a claim about this specific borrower's actual risk | My judgement |
 | STRESS-02 | Rate-rise shock | +175 bps, applied only to typically-floating-rate products (LAP, home loan, secured business loan) | Fixed-rate products (personal, two-wheeler) don't carry this risk | My judgement |
 
 ## 9. Confidence (`CONF-xx`)
 
 | Rule | What | Value | Why | Source |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | CONF-01 | Material fields | `existingMonthlyEMI`, `householdMonthlyExpenses`, `incomeStability` (non-salaried only), `creditScore`, `recentBounce`, `annualITRIncome` (self-employed only), `collateral` (secured-route only) | These are the fields that actually move O1–O4; everything else is informative but not confidence-bearing | Product judgement |
 | CONF-02 | Thresholds | 0 material unknowns → High · 1 → Medium · 2+ → Low | Confidence tracks how many things that actually matter are missing — **not** the raw fraction of all optional questions answered | Product judgement |
 
 ## 10. Product routing (`ROUTE-xx`)
 
 | Rule | What | Value | Why | Source |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | ROUTE-01 | Business purpose + unencumbered property collateral | Routes to Loan Against Property (or Business loan secured if collateral type isn't property) instead of an unsecured personal loan | Materially better rate and higher feasible amount for the same repayment capacity — this is the Ravi case | Product judgement, not a guarantee any specific lender offers this |
 | ROUTE-02 | LTV ceiling (planning cap) | LAP / secured business: 50% · Gold: 75% · Home loan: 80% | Illustrative caps on how much of collateral value can be borrowed against | Illustrative — verify current lender/RBI-linked caps (e.g. gold loan LTV is RBI-linked and changes over time) |
 | ROUTE-03 | Vehicle purpose, ticket ≤ ₹3,00,000 | Routes to two-wheeler hypothecation instead of unsecured personal loan | Vehicle-hypothecated loans are typically cheaper for this ticket size | My judgement |
@@ -144,7 +146,7 @@ This is enforced at the type level: every field that can legitimately be unknown
 
 ## 12. Question → output mapping
 
-Every question in the app carries its own `affects: string[]` field listing exactly which rule IDs / outputs it can move — see `src/questions/coreQuestions.ts` and `src/questions/adaptiveQuestions.ts`. This mapping is not a separate document that could drift from the code; it *is* the code, and the app's own "Why are we asking this?" panel on each question renders it directly. If a question doesn't list at least one rule ID it can move, it was cut during design (see the deliberately-omitted questions below).
+Every question in the app carries its own `affects: string[]` field listing exactly which rule IDs / outputs it can move — see `src/questions/coreQuestions.ts` and `src/questions/adaptiveQuestions.ts`. Non-load-bearing tenure, card-utilisation, savings-buffer, upcoming-expense, and productive-use questions were deliberately removed rather than collected without a calculation behind them.
 
 ## 13. What we deliberately did not build
 

@@ -64,38 +64,38 @@ function extractRawForQuestion(id: string, p: Answers): unknown {
       return p.creditScore;
     case 'recentBounce':
       return p.recentBounce;
-    case 'incomeTenureYears':
-      return p.incomeTenureYears ?? 'unknown';
     case 'incomeStability':
       return p.incomeStability ?? 'unknown';
     case 'annualITRIncome':
       return p.annualITRIncome ?? 'unknown';
     case 'existingLoanDetail':
       return p.existingLoanDetail ?? 'unknown';
-    case 'creditCardUtilisationPct':
-      return p.creditCardUtilisationPct ?? 'unknown';
     case 'bounceDetail':
       return p.bounceDetail && p.bounceDetail !== 'unknown' ? p.bounceDetail : undefined;
-    case 'emergencySavingsMonths':
-      return p.emergencySavingsMonths ?? 'unknown';
-    case 'upcomingLargeExpense':
-      return p.upcomingLargeExpense ?? 'unknown';
     case 'collateral':
       return p.collateral ?? 'unknown';
     case 'hasCoApplicant':
       return p.hasCoApplicant ?? false;
     case 'coApplicantMonthlyIncome':
       return p.coApplicantMonthlyIncome ?? 'unknown';
-    case 'claimsProductiveUse':
-      return p.claimsProductiveUse ?? false;
-    case 'expectedIncrementalMonthlyCashFlow':
-      return p.expectedIncrementalMonthlyCashFlow ?? 'unknown';
     default:
       return undefined;
   }
 }
 
 describe('Adaptive question flow reproduces the golden personas', () => {
+  it('does not include removed non-load-bearing questions', () => {
+    const ids = ALL_QUESTIONS.map((question) => question.id);
+    expect(ids).not.toEqual(expect.arrayContaining([
+      'incomeTenureYears',
+      'creditCardUtilisationPct',
+      'emergencySavingsMonths',
+      'upcomingLargeExpense',
+      'claimsProductiveUse',
+      'expectedIncrementalMonthlyCashFlow',
+    ]));
+  });
+
   it('Priya: flow skips self-employed/informal-only questions and produces the Borrow verdict', () => {
     const { finalDraft, askedIds, skippedIds } = simulateFlow(priya);
     expect(skippedIds).toContain('monthlyIncomeRange'); // salaried, so this doesn't apply

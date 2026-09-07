@@ -18,7 +18,10 @@ export function computeIncomeModel(a: Answers): IncomeModel {
   const assumptions: string[] = [];
 
   if (a.incomeType === 'salaried') {
-    const income = a.netMonthlyIncomeSalaried ?? 0;
+    if (isUnknown(a.netMonthlyIncomeSalaried) || a.netMonthlyIncomeSalaried === undefined) {
+      throw new Error('A known salaried monthly income is required before financial outputs can be calculated.');
+    }
+    const income = a.netMonthlyIncomeSalaried;
     const reliable: RuleOutput<number> = {
       value: income,
       confidence: 'High',
@@ -39,13 +42,17 @@ export function computeIncomeModel(a: Answers): IncomeModel {
   // Self-employed and informal both use the low end of the stated range for
   // the BORROWER-SAFE figure (INC-01 / INC-02), and diverge on the
   // LENDER-LIKELY anchor.
-  const low = a.monthlyIncomeRangeLow ?? 0;
-  const high = a.monthlyIncomeRangeHigh ?? low;
-  const reliableValue = low; // conservative: low end, not a midpoint blend
-
-  if (low === 0 && high === 0) {
-    assumptions.push('No income range was provided; reliable income defaulted to 0, which will make later ceilings very conservative and confidence Low.');
+  if (
+    isUnknown(a.monthlyIncomeRangeLow) ||
+    a.monthlyIncomeRangeLow === undefined ||
+    isUnknown(a.monthlyIncomeRangeHigh) ||
+    a.monthlyIncomeRangeHigh === undefined
+  ) {
+    throw new Error('Known monthly income range is required before financial outputs can be calculated.');
   }
+  const low = a.monthlyIncomeRangeLow;
+  const high = a.monthlyIncomeRangeHigh;
+  const reliableValue = low; // conservative: low end, not a midpoint blend
 
   const reliable: RuleOutput<number> = {
     value: reliableValue,

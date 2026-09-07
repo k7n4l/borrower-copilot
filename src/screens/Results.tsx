@@ -65,7 +65,12 @@ export function Results({
           <div>
             <p className="text-sm text-ink-muted">Safe for you</p>
             <p className="tabular font-display text-2xl text-marigold-deep">{formatINR(outputs.amount.borrowerSafeAmount.value)}</p>
-            <p className="mt-1 text-xs text-ink-muted">Use this one</p>
+            <p className="mt-1 text-xs text-ink-muted">Recommended — use this one</p>
+            {outputs.amount.borrowerSafeAmount.range && (
+              <p className="mt-1 text-xs text-ink-muted">
+                Range: {formatINR(outputs.amount.borrowerSafeAmount.range.low)}–{formatINR(outputs.amount.borrowerSafeAmount.range.high)}
+              </p>
+            )}
           </div>
           <div>
             <p className="text-sm text-ink-muted">Lender may offer</p>
@@ -95,6 +100,12 @@ export function Results({
       <section className="mt-8 border-t border-paper-line pt-6">
         <p className="text-xs uppercase tracking-wide text-ink-muted">Safe monthly EMI</p>
         <p className="tabular mt-1 font-display text-2xl text-ink">{formatINR(outputs.affordability.safeEmiCeiling.value)}/mo</p>
+        <p className="mt-1 text-sm font-medium text-marigold-deep">Do not exceed this ceiling</p>
+        {outputs.affordability.safeEmiCeiling.range && (
+          <p className="mt-1 text-xs text-ink-muted">
+            Planning range: {formatINR(outputs.affordability.safeEmiCeiling.range.low)}–{formatINR(outputs.affordability.safeEmiCeiling.range.high)}/mo
+          </p>
+        )}
         <p className="mt-2 text-sm text-ink-soft">{outputs.affordability.safeEmiCeiling.explanation}</p>
 
         <div className="mt-4 space-y-2">

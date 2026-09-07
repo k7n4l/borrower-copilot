@@ -219,6 +219,14 @@ export const APR_RULES = {
   METHOD: 'cash_flow_irr' as const,
 } as const;
 
+/** AMT-LENDER-01 — illustrative lender-likely amount assumptions. */
+export const LENDER_AMOUNT_RULES = {
+  /** Looser income-only FOIR proxy; my judgement, not a lender formula. */
+  LOOSER_FOIR_PCT: 0.5,
+  /** Fallback when existing EMI is unknown; my judgement, not a lender formula. */
+  UNKNOWN_EXISTING_EMI_PCT_OF_LENDER_INCOME: 0.1,
+} as const;
+
 /** TEN-xx — Tenure */
 export const TENURE_RULES = {
   /** TEN-01: the three tenure options shown, as a fraction of the max

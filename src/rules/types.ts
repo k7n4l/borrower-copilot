@@ -65,10 +65,10 @@ export interface CoreAnswers {
   // Income
   incomeType: IncomeType;
   /** Salaried: single reliable monthly figure. */
-  netMonthlyIncomeSalaried?: number;
+  netMonthlyIncomeSalaried?: Unknown<number>;
   /** Self-employed / informal: borrower's own stated range. */
-  monthlyIncomeRangeLow?: number;
-  monthlyIncomeRangeHigh?: number;
+  monthlyIncomeRangeLow?: Unknown<number>;
+  monthlyIncomeRangeHigh?: Unknown<number>;
   /** Self-employed only: last filed ITR, annualised documented income. */
   annualITRIncome?: Unknown<number>;
 
@@ -84,7 +84,6 @@ export interface CoreAnswers {
 
 export interface AdaptiveAnswers {
   // Stability / history
-  incomeTenureYears?: Unknown<number>; // years in current job / years in business
   incomeStability?: Unknown<'stable' | 'somewhat_variable' | 'highly_variable'>;
 
   // Existing debt detail
@@ -92,8 +91,6 @@ export interface AdaptiveAnswers {
     count: number;
     highestRateApprox: Unknown<number>; // annual %, e.g. 0.30 for 30%
   }>;
-  creditCardUtilisationPct?: Unknown<number>; // 0-100
-
   // Distress detail (asked only if recentBounce === true)
   bounceDetail?: Unknown<{
     timesInLast12Months: number;
@@ -101,9 +98,6 @@ export interface AdaptiveAnswers {
   }>;
 
   // Buffers
-  emergencySavingsMonths?: Unknown<number>;
-  upcomingLargeExpense?: Unknown<number>; // ₹ amount, 0 if none
-
   // Collateral (asked for secured-relevant purposes/products)
   collateral?: Unknown<{
     type: 'property' | 'gold' | 'vehicle' | 'other';
@@ -115,9 +109,6 @@ export interface AdaptiveAnswers {
   hasCoApplicant?: boolean; // default false until borrower confirms
   coApplicantMonthlyIncome?: Unknown<number>;
 
-  // Productive-use claim
-  claimsProductiveUse?: boolean;
-  expectedIncrementalMonthlyCashFlow?: Unknown<number>; // borrower's own claim, unverified
 }
 
 export type Answers = CoreAnswers & AdaptiveAnswers;

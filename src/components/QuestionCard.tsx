@@ -71,11 +71,17 @@ function SelectInput({ question, onAnswer }: Props) {
 
 function CurrencyInput({ question, onAnswer }: Props) {
   const [value, setValue] = useState('');
+  const [error, setError] = useState('');
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        onAnswer(value === '' ? 0 : Number(value));
+        if (value === '') {
+          setError(question.allowUnknown ? "Enter a value before continuing, or choose 'I don't know'." : 'Enter a value before continuing.');
+          return;
+        }
+        setError('');
+        onAnswer(Number(value));
       }}
       className="space-y-3"
     >
@@ -90,6 +96,7 @@ function CurrencyInput({ question, onAnswer }: Props) {
           autoFocus
         />
       </div>
+      {error && <p className="text-sm text-dont-borrow">{error}</p>}
       <div className="flex gap-2">
         <button type="submit" className="rounded-lg bg-ink px-5 py-2.5 font-medium text-paper">
           Continue
@@ -147,11 +154,21 @@ function NumberInput({ question, onAnswer }: Props) {
 function RangeInput({ onAnswer }: { onAnswer: (raw: unknown) => void }) {
   const [low, setLow] = useState('');
   const [high, setHigh] = useState('');
+  const [error, setError] = useState('');
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        onAnswer({ low: Number(low) || 0, high: Number(high) || Number(low) || 0 });
+        if (low === '' || high === '') {
+          setError('Enter both income values before continuing.');
+          return;
+        }
+        if (Number(low) > Number(high)) {
+          setError('The low month cannot be higher than the high month.');
+          return;
+        }
+        setError('');
+        onAnswer({ low: Number(low), high: Number(high) });
       }}
       className="space-y-3"
     >
@@ -174,6 +191,7 @@ function RangeInput({ onAnswer }: { onAnswer: (raw: unknown) => void }) {
       <button type="submit" className="rounded-lg bg-ink px-5 py-2.5 font-medium text-paper">
         Continue
       </button>
+      {error && <p className="text-sm text-dont-borrow">{error}</p>}
     </form>
   );
 }

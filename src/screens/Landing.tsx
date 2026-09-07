@@ -1,6 +1,6 @@
 export function Landing({ onStart }: { onStart: () => void }) {
   return (
-    <div className="flex min-h-[100dvh] flex-col justify-between px-6 py-10">
+    <div className="flex min-h-dvh flex-col justify-between px-6 py-10">
       <div />
       <div className="mx-auto w-full max-w-md">
         <p className="text-sm font-medium text-marigold-deep">Before you walk into a lender</p>

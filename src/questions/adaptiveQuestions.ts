@@ -5,19 +5,6 @@ const BUSINESS_PURPOSES: Answers['purpose'][] = ['business_stock_or_equipment', 
 
 export const ADAPTIVE_QUESTIONS: QuestionDef[] = [
   {
-    id: 'incomeTenureYears',
-    tier: 'adaptive',
-    section: 'Stability',
-    prompt: 'How many years have you been in this job / running this business?',
-    reason: 'Asked because: longer, established income history supports a tighter (less cautious) confidence rating. Changes: overall confidence and, for self-employed/informal borrowers, whether we treat the income range as reasonably reliable.',
-    affects: ['CONF-01'],
-    controlType: 'number',
-    appliesWhen: (d) => d.incomeType !== 'salaried' || true, // relevant for everyone, but especially non-salaried
-    skipReason: () => null,
-    allowUnknown: true,
-    applyAnswer: (draft, raw) => ({ ...draft, incomeTenureYears: raw === 'unknown' ? 'unknown' : Number(raw) }),
-  },
-  {
     id: 'incomeStability',
     tier: 'adaptive',
     section: 'Stability',
@@ -72,23 +59,6 @@ export const ADAPTIVE_QUESTIONS: QuestionDef[] = [
     },
   },
   {
-    id: 'creditCardUtilisationPct',
-    tier: 'adaptive',
-    section: 'Existing debt',
-    prompt: 'If you have a credit card, roughly what % of your limit do you usually carry?',
-    reason:
-      'Asked because: high utilisation is a recognised early-warning risk signal separate from a formal score. Changes: a minor upward nudge to the fair-rate band when utilisation is very high; skipped if no card.',
-    affects: ['RATE-01'],
-    controlType: 'number',
-    appliesWhen: () => true,
-    skipReason: () => null,
-    allowUnknown: true,
-    applyAnswer: (draft, raw) => ({
-      ...draft,
-      creditCardUtilisationPct: raw === 'unknown' ? 'unknown' : Number(raw),
-    }),
-  },
-  {
     id: 'bounceDetail',
     tier: 'adaptive',
     section: 'Distress detail',
@@ -104,41 +74,6 @@ export const ADAPTIVE_QUESTIONS: QuestionDef[] = [
       const v = raw as { timesInLast12Months: number; resolved: boolean };
       return { ...draft, bounceDetail: v };
     },
-  },
-  {
-    id: 'emergencySavingsMonths',
-    tier: 'adaptive',
-    section: 'Buffers',
-    prompt: 'If your income stopped today, how many months of expenses could you cover from savings?',
-    reason:
-      'Asked because: this is genuinely informative for everyone, especially variable-income borrowers. Changes: the stress-case narrative (a thin buffer makes the income-drop stress case more consequential) and can nudge overall confidence.',
-    affects: ['STRESS-01', 'CONF-01'],
-    controlType: 'number',
-    appliesWhen: () => true,
-    skipReason: () => null,
-    allowUnknown: true,
-    applyAnswer: (draft, raw) => ({
-      ...draft,
-      emergencySavingsMonths: raw === 'unknown' ? 'unknown' : Number(raw),
-    }),
-  },
-  {
-    id: 'upcomingLargeExpense',
-    tier: 'adaptive',
-    section: 'Buffers',
-    prompt: 'Any large expense coming up in the next 6 months (school fees, medical, festival, etc.)?',
-    helpText: 'Enter ₹0 if none.',
-    reason:
-      'Asked because: an upcoming known expense should trim the safety buffer shown in the stress case. Changes: the stress-case explanation shown alongside O4.',
-    affects: ['STRESS-01'],
-    controlType: 'currency_number',
-    appliesWhen: () => true,
-    skipReason: () => null,
-    allowUnknown: true,
-    applyAnswer: (draft, raw) => ({
-      ...draft,
-      upcomingLargeExpense: raw === 'unknown' ? 'unknown' : Number(raw),
-    }),
   },
   {
     id: 'collateral',
@@ -191,41 +126,6 @@ export const ADAPTIVE_QUESTIONS: QuestionDef[] = [
     applyAnswer: (draft, raw) => ({
       ...draft,
       coApplicantMonthlyIncome: raw === 'unknown' ? 'unknown' : Number(raw),
-    }),
-  },
-  {
-    id: 'claimsProductiveUse',
-    tier: 'adaptive',
-    section: 'Productive use',
-    prompt: 'Will this loan directly help you earn more (e.g. new equipment, stock, an income-generating vehicle)?',
-    reason:
-      'Asked because: only meaningful for business/vehicle purposes. Changes: whether we show a separate, heavily-discounted productive-use sensitivity alongside the main numbers — it never inflates the main safe/lender-likely figures.',
-    affects: ['O4'],
-    controlType: 'boolean',
-    appliesWhen: (d) => BUSINESS_PURPOSES.includes(d.purpose as Answers['purpose']) || d.purpose === 'vehicle',
-    skipReason: (d) =>
-      !BUSINESS_PURPOSES.includes(d.purpose as Answers['purpose']) && d.purpose !== 'vehicle'
-        ? 'Skipped: purpose is not business/vehicle, so a productive-use claim would not be relevant.'
-        : null,
-    allowUnknown: false,
-    applyAnswer: (draft, raw) => ({ ...draft, claimsProductiveUse: raw === true }),
-  },
-  {
-    id: 'expectedIncrementalMonthlyCashFlow',
-    tier: 'adaptive',
-    section: 'Productive use',
-    prompt: 'Roughly how much extra could this bring in per month?',
-    helpText: "Your best guess is fine — or say 'I don't know'.",
-    reason:
-      'Asked because: only relevant once a productive-use claim is made. Changes: the sensitivity note shown alongside O4 (never the core safe/lender-likely numbers, since this is an unverified borrower claim).',
-    affects: ['O4'],
-    controlType: 'currency_number',
-    appliesWhen: (d) => d.claimsProductiveUse === true,
-    skipReason: (d) => (d.claimsProductiveUse !== true ? 'Skipped: no productive-use claim made.' : null),
-    allowUnknown: true,
-    applyAnswer: (draft, raw) => ({
-      ...draft,
-      expectedIncrementalMonthlyCashFlow: raw === 'unknown' ? 'unknown' : Number(raw),
     }),
   },
 ];

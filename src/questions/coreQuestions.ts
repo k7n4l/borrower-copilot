@@ -92,7 +92,10 @@ export const CORE_QUESTIONS: QuestionDef[] = [
     controlType: 'currency_number',
     appliesWhen: (d) => d.incomeType === 'salaried',
     allowUnknown: false,
-    applyAnswer: (draft, raw) => ({ ...draft, netMonthlyIncomeSalaried: Number(raw) || 0 }),
+    applyAnswer: (draft, raw) => ({
+      ...draft,
+      netMonthlyIncomeSalaried: raw === '' || raw === 'unknown' ? 'unknown' : Number(raw),
+    }),
   },
   {
     id: 'monthlyIncomeRange',

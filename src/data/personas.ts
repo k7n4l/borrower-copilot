@@ -38,7 +38,6 @@ export const priya: Answers = {
   creditScore: 780,
   recentBounce: false,
 
-  incomeTenureYears: 5, // "5 years" at the MNC, explicitly given
   hasCoApplicant: false,
 };
 
@@ -59,7 +58,6 @@ export const ravi: Answers = {
   creditScore: 'no_score', // "no credit score", explicitly stated — distinct from "unknown/didn't answer"
   recentBounce: false, // no bounce mentioned; absence of a stated problem here, not "unknown" — see RUNTHROUGHS.md caveat
 
-  incomeTenureYears: 14, // "kirana store for 14 years"
   incomeStability: 'highly_variable', // cash income range 40k-80k implies real variability, asked/confirmed in questionnaire
 
   collateral: {
@@ -67,9 +65,6 @@ export const ravi: Answers = {
     estimatedValue: 4_500_000, // "shop premises, about ₹45,00,000"
     encumbered: false, // "unencumbered", explicitly given
   },
-
-  claimsProductiveUse: true,
-  expectedIncrementalMonthlyCashFlow: 'unknown', // Ravi hasn't quantified this — not invented
 
   hasCoApplicant: false, // NOT auto-assumed even though wife's income (₹18,000) is mentioned in the brief —
   // the app must ask explicitly. This fixture represents "asked, not yet confirmed".
@@ -108,6 +103,4 @@ export const anita: Answers = {
   },
 
   hasCoApplicant: false, // husband is unemployed — brief gives no income figure for him, and he is not a candidate co-applicant anyway
-  claimsProductiveUse: true, // "to double delivery runs" — her own claim
-  expectedIncrementalMonthlyCashFlow: 'unknown', // she gives an outcome claim ("double delivery runs"), not a rupee figure — NOT invented
 };

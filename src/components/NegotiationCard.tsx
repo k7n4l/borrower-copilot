@@ -59,6 +59,16 @@ export function NegotiationCard({ answers, result }: { answers: Answers; result:
         <Stat label="Lender may offer" value={formatINR(result.amount.lenderLikelyAmount.value)} />
         <Stat label="Safe EMI" value={formatINR(result.affordability.safeEmiCeiling.value) + '/mo'} highlight />
       </div>
+      {result.amount.borrowerSafeAmount.range && (
+        <p className="mt-2 text-xs text-ink-muted">
+          Safe amount planning range: {formatINR(result.amount.borrowerSafeAmount.range.low)}–{formatINR(result.amount.borrowerSafeAmount.range.high)}. Use the central safe amount above.
+        </p>
+      )}
+      {result.affordability.safeEmiCeiling.range && (
+        <p className="mt-1 text-xs text-ink-muted">
+          Safe EMI planning range: {formatINR(result.affordability.safeEmiCeiling.range.low)}–{formatINR(result.affordability.safeEmiCeiling.range.high)}/mo; do not exceed the central ceiling.
+        </p>
+      )}
 
       <div className="mt-4 border-t border-paper-line pt-4">
         <p className="text-xs uppercase tracking-wide text-ink-muted">Fair rate for your profile</p>

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { computeIncomeModel, coApplicantContribution } from '../rules/income';
 import { computeAffordability } from '../rules/affordability';
+import { LENDER_AMOUNT_RULES } from '../rules/constants';
 import type { Answers } from '../rules/types';
 
 function baseAnswers(overrides: Partial<Answers>): Answers {
@@ -21,6 +22,21 @@ function baseAnswers(overrides: Partial<Answers>): Answers {
 }
 
 describe('computeIncomeModel', () => {
+  it('rejects missing salaried income instead of converting it to zero', () => {
+    const a = baseAnswers({ netMonthlyIncomeSalaried: 'unknown' });
+    expect(() => computeIncomeModel(a)).toThrow(/known salaried monthly income is required/i);
+  });
+
+  it('rejects missing variable income instead of converting it to zero', () => {
+    const a = baseAnswers({ incomeType: 'informal', monthlyIncomeRangeLow: 'unknown', monthlyIncomeRangeHigh: 'unknown' });
+    expect(() => computeIncomeModel(a)).toThrow(/known monthly income range is required/i);
+  });
+
+  it('keeps explicit zero income distinct from missing income', () => {
+    const a = baseAnswers({ netMonthlyIncomeSalaried: 0 });
+    expect(computeIncomeModel(a).reliableMonthlyIncome.value).toBe(0);
+  });
+
   it('salaried: reliable and lender-facing income are identical and equal stated net income', () => {
     const a = baseAnswers({ incomeType: 'salaried', netMonthlyIncomeSalaried: 110_000 });
     const income = computeIncomeModel(a);
@@ -107,6 +123,10 @@ describe('coApplicantContribution', () => {
 });
 
 describe('computeAffordability', () => {
+  it('keeps lender amount assumptions centralized and explicit', () => {
+    expect(LENDER_AMOUNT_RULES.LOOSER_FOIR_PCT).toBe(0.5);
+    expect(LENDER_AMOUNT_RULES.UNKNOWN_EXISTING_EMI_PCT_OF_LENDER_INCOME).toBe(0.1);
+  });
   it('higher income increases the safe EMI ceiling, all else equal', () => {
     const low = baseAnswers({ netMonthlyIncomeSalaried: 60_000 });
     const high = baseAnswers({ netMonthlyIncomeSalaried: 120_000 });

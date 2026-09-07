@@ -6,7 +6,7 @@ No login. No backend. No data stored anywhere — everything runs in the browser
 
 ## Quick start
 
-Requires Node.js 18+.
+Requires Node.js 22.13+ (the current dependency tree, including jsdom, requires Node 22.13 or newer).
 
 ```bash
 npm install
@@ -29,12 +29,14 @@ To run the test suite:
 npm test
 ```
 
-63 tests across the EMI/IRR math, the affordability engine, the three golden persona fixtures, the adaptive question flow, a live-assumption-change check, and two full end-to-end UI tests (a happy-path walkthrough and the interactive "What would change this?" sensitivity screen) that actually render the app and click through real flows.
+The test command uses one worker for reliable startup on constrained machines.
+
+68 tests across the EMI/IRR math, the affordability engine, the three golden persona fixtures, the adaptive question flow, a live-assumption-change check, and two full end-to-end UI tests (a happy-path walkthrough and the interactive "What would change this?" sensitivity screen) that actually render the app and click through real flows.
 
 ## What's in this repo
 
 | Path | What |
-|---|---|
+| ------ | ------ |
 | `RULES.md` | Every threshold, formula, and assumption, in a `Rule · What · Value · Why · Source` table. Read this alongside the code — it's not a separate spec that could drift, it's a direct walk of `src/rules/constants.ts`. |
 | `RUNTHROUGHS.md` | The three required borrower run-throughs (Priya, Ravi, Anita), with exact questions asked/skipped and the app's actual computed output for each. |
 | `src/rules/` | The deterministic rules engine — pure functions, no React, no network, no ML. `engine.ts` is the single entry point (`computeOutputs(answers)`); every screen renders from its output and never calculates anything itself. |

@@ -66,6 +66,8 @@ describe('End-to-end UI smoke test', () => {
     expect(await screen.findByText('Borrow')).toBeInTheDocument();
     expect(screen.getByText(/Safe for you/i)).toBeInTheDocument();
     expect(screen.getByText(/Lender may offer/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Range:/i)).toHaveLength(2);
+    expect(screen.getByText(/Planning range:/i)).toBeInTheDocument();
 
     // Open the Negotiation Card and confirm it renders from the same result.
     fireEvent.click(screen.getByRole('button', { name: /Open my Negotiation Card/i }));

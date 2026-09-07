@@ -1,7 +1,7 @@
 import type { AffordabilityModel, Answers, AmountOutput, IncomeModel, ProductType, RateOutput } from './types';
 import { isUnknown } from './types';
 import { maxPrincipalForEmi, calculateEMI } from '../utils/emi';
-import { ROUTING_RULES } from './constants';
+import { LENDER_AMOUNT_RULES, ROUTING_RULES } from './constants';
 import { coApplicantContribution } from './income';
 
 /**
@@ -40,15 +40,17 @@ export function computeAmount(
   // against documented income, without deducting a borrower's full
   // household expense picture the way our safe-side residual check does.
   // My judgement / illustrative proxy, not a specific lender's formula.
-  const LOOSER_FOIR = 0.5;
   const lenderIncome =
     income.documentedMonthlyIncomeForLender.value + coApplicantContribution(a, 'lender').amount;
-  const existingEMIForLender = isUnknown(a.existingMonthlyEMI) ? lenderIncome * 0.1 : a.existingMonthlyEMI;
-  const lenderEmiCapacity = Math.max(0, LOOSER_FOIR * lenderIncome - existingEMIForLender);
+  const existingEMIForLender = isUnknown(a.existingMonthlyEMI)
+    ? lenderIncome * LENDER_AMOUNT_RULES.UNKNOWN_EXISTING_EMI_PCT_OF_LENDER_INCOME
+    : a.existingMonthlyEMI;
+  const lenderEmiCapacity = Math.max(0, LENDER_AMOUNT_RULES.LOOSER_FOIR_PCT * lenderIncome - existingEMIForLender);
   let lenderAmountRaw = maxPrincipalForEmi(lenderEmiCapacity, fairRateMid, tenureYears);
 
   const lenderAssumptions: string[] = [
     'Lender-likely amount is an illustrative planning estimate using a looser, income-only affordability proxy — not an actual lender\'s formula or a guarantee of sanction.',
+    `This estimate uses a ${Math.round(LENDER_AMOUNT_RULES.LOOSER_FOIR_PCT * 100)}% lender-facing FOIR proxy and, when your existing EMI is unknown, assumes ${Math.round(LENDER_AMOUNT_RULES.UNKNOWN_EXISTING_EMI_PCT_OF_LENDER_INCOME * 100)}% of lender-facing income for existing debt — both are planning judgements, not lender policy.`,
     ...income.documentedMonthlyIncomeForLender.assumptionsUsed,
   ];
 
